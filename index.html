@@ -6,16 +6,17 @@
     <meta name="theme-color" content="#eee9df">
     <title>Home</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DotGothic16&family=Manrope:wght@400;500;600;700&display=swap');
 
         :root {
-            --background: #eee9df;
-            --background-deep: #d8d2c7;
-            --ink: #20201e;
-            --muted: rgba(32, 32, 30, 0.5);
-            --line: rgba(32, 32, 30, 0.16);
-            --field: rgba(255, 255, 255, 0.34);
+            --background: #303432;
+            --background-deep: #181b1a;
+            --ink: #f2eee6;
+            --muted: rgba(242, 238, 230, 0.58);
+            --line: rgba(242, 238, 230, 0.22);
+            --field: rgba(8, 10, 10, 0.38);
             --accent: #cf5b3d;
+            --glass-edge: rgba(242, 238, 230, 0.3);
         }
 
         * { box-sizing: border-box; }
@@ -24,7 +25,7 @@
 
         body {
             margin: 0;
-            overflow: hidden;
+            overflow-x: hidden;
             color: var(--ink);
             background: var(--background);
             font-family: 'Manrope', sans-serif;
@@ -37,62 +38,29 @@
             z-index: -1;
             content: '';
             background:
-                radial-gradient(circle at 70% 20%, rgba(255, 255, 255, 0.27), transparent 30%),
-                radial-gradient(circle at 20% 90%, rgba(185, 121, 86, 0.11), transparent 31%);
+                radial-gradient(circle at 70% 20%, rgba(255, 255, 255, 0.11), transparent 30%),
+                radial-gradient(circle at 20% 90%, rgba(185, 121, 86, 0.08), transparent 31%);
             filter: blur(12px);
-            pointer-events: none;
-        }
-
-        body::after {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 170px;
-            z-index: -1;
-            content: '';
-            opacity: 0.32;
-            background:
-                radial-gradient(ellipse at 50% -18%, rgba(255, 91, 38, 0.58), transparent 58%),
-                repeating-radial-gradient(ellipse at 50% 100%, transparent 0 14px, var(--accent) 15px 17px, transparent 18px 31px);
-            -webkit-mask-image: linear-gradient(to bottom, black, transparent);
-            mask-image: linear-gradient(to bottom, black, transparent);
-            filter: blur(0.2px);
-            animation: wave-drift 18s linear infinite;
-            pointer-events: none;
-        }
-
-        .page::after {
-            position: fixed;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            height: 175px;
-            z-index: -1;
-            content: '';
-            opacity: 0.3;
-            background:
-                radial-gradient(ellipse at 50% 118%, rgba(255, 91, 38, 0.52), transparent 58%),
-                repeating-radial-gradient(ellipse at 50% 0, transparent 0 14px, var(--accent) 15px 17px, transparent 18px 31px);
-            -webkit-mask-image: linear-gradient(to top, black, transparent);
-            mask-image: linear-gradient(to top, black, transparent);
-            filter: blur(0.2px);
-            animation: wave-drift-reverse 22s linear infinite;
             pointer-events: none;
         }
 
         .page {
             display: flex;
+            position: relative;
             min-height: 100svh;
-            padding: clamp(28px, 5vw, 72px);
+            padding: clamp(20px, 3.8vw, 56px) clamp(28px, 5vw, 72px) clamp(20px, 3vw, 42px);
             flex-direction: column;
             justify-content: space-between;
         }
 
-        .topline, .search-meta {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+        .topline {
+            display: grid;
+            grid-template-columns: minmax(0, 400px) minmax(220px, 270px);
+            align-items: start;
+            justify-content: center;
+            gap: 14px;
+            align-self: center;
+            transform: translateY(-8px);
             font-family: 'DM Mono', monospace;
             font-size: 10px;
             letter-spacing: 0.15em;
@@ -100,43 +68,229 @@
         }
 
         .topline { animation: appear 900ms ease both; }
-        .topline { justify-content: center; gap: 15px; }
 
-        .calendar-widget {
-            display: grid;
-            width: 238px;
-            min-height: 86px;
-            padding: 13px 18px;
-            border: 1px solid var(--line);
+        .travel-widget {
+            width: 100%;
+            padding: 16px 17px;
+            border: 1px solid rgba(242, 238, 230, 0.2);
             border-radius: 18px;
-            background: var(--field);
-            backdrop-filter: blur(18px);
+            color: var(--ink);
+            background: rgba(8, 10, 10, 0.36);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            font-family: 'DM Mono', monospace;
+        }
+
+        .travel-header, .travel-route, .travel-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .travel-kicker, .travel-date, .travel-footer {
+            color: var(--muted);
+            font-size: 8px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .travel-kicker::before {
+            display: inline-block;
+            width: 5px;
+            height: 5px;
+            margin-right: 8px;
+            border-radius: 50%;
+            background: #e6a052;
+            box-shadow: 0 0 10px rgba(230, 160, 82, 0.75);
+            content: '';
+        }
+
+        .travel-countdown {
+            color: #e6a052;
+            font-family: 'DotGothic16', monospace;
+            font-size: 20px;
+            letter-spacing: -0.04em;
+        }
+
+        .travel-route { gap: 8px; margin: 21px 0 13px; }
+        .travel-city { font-size: 10px; letter-spacing: 0.05em; }
+        .travel-line {
+            position: relative;
+            height: 1px;
+            flex: 1;
+            background: rgba(242, 238, 230, 0.25);
+        }
+
+        .travel-line::before {
+            position: absolute;
+            top: -2px;
+            left: 0;
+            width: 5px;
+            height: 5px;
+            border-radius: 1px;
+            background: #e6a052;
+            box-shadow: 0 0 12px rgba(230, 160, 82, 0.85);
+            content: '';
+            transform: rotate(45deg);
+            animation: travel-marker 4.5s ease-in-out infinite;
+        }
+
+        .travel-footer { padding-top: 10px; border-top: 1px solid rgba(242, 238, 230, 0.12); }
+        .travel-footer strong { color: var(--ink); font-weight: 400; }
+
+        @keyframes travel-marker {
+            0%, 12% { left: 0; opacity: 0.45; }
+            44% { left: 48%; opacity: 1; }
+            82%, 100% { left: calc(100% - 5px); opacity: 0.55; }
+        }
+
+        .finance-widget {
+            position: relative;
+            z-index: 3;
+            width: min(100%, 400px);
+            padding: 16px 18px;
+            border: 1px solid var(--glass-edge);
+            border-radius: 18px;
+            color: var(--ink);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 42%), rgba(8, 10, 10, 0.52);
+            box-shadow: 0 18px 50px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(22px);
+            transition: background 350ms ease, box-shadow 350ms ease;
+            font-family: 'DotGothic16', 'DM Mono', monospace;
+            cursor: pointer;
+        }
+
+        .finance-widget.is-open {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), transparent 38%), #050606;
+            border-color: rgba(170, 170, 170, 0.72);
+            box-shadow: 0 28px 80px rgba(0, 0, 0, 0.48);
+        }
+
+        .finance-summary {
+            display: grid;
             grid-template-columns: 1fr auto;
-            grid-template-rows: auto 1fr;
-            column-gap: 22px;
-            row-gap: 8px;
-            text-align: left;
+            gap: 4px 14px;
+            align-items: end;
+            cursor: pointer;
         }
 
-        .calendar-label, .calendar-month {
+        .widget-kicker, .progress-label, .input-label {
             color: var(--muted);
+            font-family: 'DM Mono', monospace;
             font-size: 9px;
-            letter-spacing: 0.14em;
+            letter-spacing: 0.12em;
             text-transform: uppercase;
         }
 
-        .calendar-label { grid-column: 1; }
-        .calendar-weekday {
-            align-self: start;
+        .widget-kicker { position: relative; grid-column: 1; padding-left: 13px; }
+        .widget-kicker::before {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 12px rgba(207, 91, 61, 0.75);
+            content: '';
+            transform: translateY(-50%);
+        }
+        .amount {
+            display: block;
+            margin-top: 4px;
+            font-family: 'DotGothic16', 'DM Mono', monospace;
+            font-size: clamp(24px, 4vw, 34px);
+            font-weight: 600;
+            letter-spacing: -0.04em;
+            line-height: 0.95;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .progress-stack { display: grid; gap: 12px; margin-top: 16px; }
+        .progress-row { display: grid; gap: 6px; }
+        .progress-label { display: flex; justify-content: space-between; color: rgba(242, 238, 230, 0.68); }
+        .progress-label span:last-child { color: var(--ink); font-weight: 500; }
+        .progress-track { display: flex; gap: 1px; height: 6px; }
+        .progress-tick { flex: 1; min-width: 1px; border-radius: 1px; background: rgba(220, 220, 215, 0.28); transition: background 350ms ease; }
+        .progress-tick.period-active { background: #e3663c; }
+        .money-track { display: block; height: 7px; border-radius: 2px; background: rgba(220, 220, 215, 0.22); overflow: hidden; }
+        .money-fill { display: block; width: 0; height: 100%; border-radius: inherit; background: hsl(var(--green-hue, 105) 48% 42%); transition: width 500ms ease, background 500ms ease; }
+        .progress-endpoints { display: flex; justify-content: space-between; color: var(--muted); font: 8px 'DM Mono', monospace; }
+
+        .finance-details {
+            display: grid;
+            grid-template-rows: 0fr;
+            padding: 0;
+            opacity: 0;
+            transition: grid-template-rows 460ms ease, opacity 220ms ease, padding 460ms ease;
+        }
+
+        .is-open .finance-details { grid-template-rows: 1fr; padding: 16px 0 0; opacity: 1; }
+        .details-inner { min-height: 0; overflow: hidden; }
+
+        .finance-details, .finance-details button, .finance-details input { cursor: default; }
+
+        .calendar-months {
+            display: grid;
+            gap: 7px;
+            margin-bottom: 6px;
             color: var(--muted);
-            font-size: 10px;
-            letter-spacing: 0.08em;
-            text-align: right;
+            font: 8px 'DM Mono', monospace;
             text-transform: uppercase;
         }
-        .calendar-main { display: flex; align-items: end; gap: 10px; grid-column: 1 / -1; }
-        .calendar-day { font-size: 32px; font-weight: 600; line-height: 0.82; }
-        .calendar-month { align-self: end; margin-bottom: 1px; }
+
+        .calendar-months span { white-space: nowrap; }
+
+        .earnings-grid {
+            display: grid;
+            grid-template-rows: repeat(7, 8px);
+            grid-auto-flow: column;
+            grid-auto-columns: 8px;
+            gap: 5px;
+            padding: 2px 0 18px;
+            border-bottom: 1px solid var(--line);
+            overflow-x: auto;
+        }
+
+        .earning-day {
+            display: grid;
+            width: 8px;
+            height: 8px;
+            padding: 0;
+            place-items: center;
+            border: 0;
+            border-radius: 1.5px;
+            color: transparent;
+            background: rgba(220, 220, 215, 0.28);
+            font-size: 0;
+            cursor: pointer;
+            transition: transform 180ms ease, background 250ms ease, box-shadow 250ms ease;
+        }
+
+        .earning-day:hover { transform: scale(1.35); }
+        .earning-day.level-1 { color: #33230b; background: #f3c84b; }
+        .earning-day.level-2 { color: #fff2e7; background: #e87932; }
+        .earning-day.level-3 { color: #fff5ee; background: #b64227; }
+        .earning-day.is-today { box-shadow: none; }
+
+        .entry-form { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; align-items: end; margin-top: 20px; }
+        .input-label { display: grid; gap: 6px; }
+        .entry-input {
+            width: 100%;
+            min-height: 38px;
+            padding: 0 10px;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            outline: 0;
+            color: var(--ink);
+            background: rgba(255, 255, 255, 0.07);
+            font: 12px 'DM Mono', monospace;
+        }
+
+        .entry-input:focus { border-color: var(--ink); }
+        .entry-submit { min-height: 38px; padding: 0 15px; border: 1px solid var(--ink); border-radius: 10px; color: #101211; background: var(--ink); cursor: pointer; font: 10px 'DM Mono', monospace; text-transform: uppercase; transition: background 220ms ease, color 220ms ease, transform 220ms ease; }
+        .entry-submit:hover { background: var(--accent); }
+        .entry-note { min-height: 14px; margin: 10px 0 0; color: var(--muted); font: 10px 'DM Mono', monospace; }
 
         .signal {
             display: inline-flex;
@@ -174,7 +328,7 @@
         .clock {
             margin: 0;
             font-size: clamp(72px, 14vw, 168px);
-            font-weight: 500;
+            font-weight: 400;
             letter-spacing: -0.07em;
             line-height: 0.85;
         }
@@ -195,6 +349,7 @@
         .search-wrap {
             align-self: center;
             width: min(100%, 620px);
+            transform: translateY(12px);
             animation: rise 1100ms 240ms ease both;
         }
 
@@ -205,7 +360,7 @@
             padding: 0 11px 0 22px;
             border: 1px solid var(--line);
             border-radius: 18px;
-            background: var(--field);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), transparent 48%), var(--field);
             backdrop-filter: blur(18px);
             transition: border-color 300ms ease, background 300ms ease, transform 300ms ease;
         }
@@ -248,15 +403,22 @@
         .search-submit:hover { background: var(--accent); transform: rotate(-8deg); }
         .search-submit svg { width: 17px; height: 17px; }
 
+        :focus-visible { outline: none; }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+        }
+
         @keyframes appear { from { opacity: 0; } to { opacity: 1; } }
         @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes wave-drift { from { background-position: 0 0; } to { background-position: 58px 0; } }
-        @keyframes wave-drift-reverse { from { background-position: 0 0; } to { background-position: -72px 0; } }
 
         @media (max-width: 560px) {
             .page { padding: 27px 22px 30px; }
-            .topline { flex-direction: column; gap: 10px; }
-            .calendar-widget { width: min(238px, calc(100vw - 44px)); min-width: 136px; padding: 11px 14px; }
+            .topline { grid-template-columns: 1fr; gap: 10px; }
+            .finance-widget { width: min(100%, 400px); padding: 14px; }
+            .travel-widget { width: min(100%, 400px); }
+            .entry-form { grid-template-columns: 1fr 1fr; }
+            .entry-submit { grid-column: 1 / -1; }
             .clock { font-size: clamp(65px, 21vw, 105px); }
             .clock-stage { margin-bottom: 28vh; }
             .search-form { min-height: 60px; padding-left: 18px; }
@@ -267,15 +429,55 @@
 <body>
     <main class="page">
         <header class="topline">
-            <div class="calendar-widget" aria-label="Календарь">
-                <span class="calendar-label">День</span>
-                <span class="calendar-weekday" id="calendar-weekday">---</span>
-                <div class="calendar-main">
-                    <span class="calendar-day" id="calendar-day">--</span>
-                    <span class="calendar-month" id="calendar-month">---</span>
+            <div class="finance-widget" id="finance-widget" role="button" tabindex="0" aria-expanded="false" aria-controls="finance-details">
+                <div class="finance-summary">
+                    <div class="widget-kicker">Финансовый трекер</div>
+                    <strong class="amount" id="current-amount">0 ₽</strong>
+                </div>
+
+                <div class="progress-stack">
+                    <div class="progress-row">
+                        <div class="progress-label"><span>До 20 декабря</span><span id="period-progress">0%</span></div>
+                        <div class="progress-track" id="period-track" aria-label="Прогресс времени"></div>
+                        <div class="progress-endpoints"><span>1 сентября</span><span>20 декабря</span></div>
+                    </div>
+                    <div class="progress-row">
+                        <div class="progress-label"><span>Накопления</span><span id="money-progress">0%</span></div>
+                        <div class="money-track" aria-label="Прогресс накоплений"><span class="money-fill" id="money-track"></span></div>
+                        <div class="progress-endpoints"><span>0 ₽</span><span>350к</span></div>
+                    </div>
+                </div>
+
+                <div class="finance-details" id="finance-details">
+                    <div class="details-inner">
+                        <div class="calendar-months" id="calendar-months" aria-hidden="true"></div>
+                        <div class="earnings-grid" id="earnings-grid" aria-label="Поступления по дням"></div>
+                        <form class="entry-form" id="entry-form">
+                            <label class="input-label">Дата<input class="entry-input" id="entry-date" type="date" required></label>
+                            <label class="input-label">Сумма<input class="entry-input" id="entry-amount" type="number" min="0" step="100" placeholder="₽" required></label>
+                            <button class="entry-submit" type="submit">Добавить</button>
+                        </form>
+                        <p class="entry-note" id="entry-note">Нажмите на день, чтобы выбрать его для записи.</p>
+                    </div>
                 </div>
             </div>
-            <span class="signal" id="daypart">День</span>
+            <article class="travel-widget" aria-label="План поездки">
+                <div class="travel-header">
+                    <span class="travel-kicker">Следующий маршрут</span>
+                    <strong class="travel-countdown" id="travel-countdown">D-97</strong>
+                </div>
+                <div class="travel-route">
+                    <span class="travel-city">ВРН</span>
+                    <span class="travel-line"></span>
+                    <span class="travel-city">МСК</span>
+                    <span class="travel-line"></span>
+                    <span class="travel-city">ХБР</span>
+                </div>
+                <div class="travel-footer">
+                    <span>вылет <strong>25 дек</strong></span>
+                    <span>путь на восток</span>
+                </div>
+            </article>
         </header>
 
         <section class="clock-stage" aria-label="Текущее время">
@@ -304,34 +506,162 @@
         const themeColor = document.querySelector('meta[name="theme-color"]');
         const timeOptions = { hour: '2-digit', minute: '2-digit', hour12: false };
         const dateOptions = { day: '2-digit', month: 'long', year: 'numeric' };
+        const goalAmount = 350000;
+        const periodStart = new Date(2026, 8, 1);
+        const periodEnd = new Date(2026, 11, 20);
+        const travelDate = new Date(2026, 11, 25, 9, 0, 0);
+        const moneyStorageKey = 'home-finance-entries';
+        let entries = JSON.parse(localStorage.getItem(moneyStorageKey) || '{}');
+
+        function formatDateKey(date) {
+            return [date.getFullYear(), String(date.getMonth() + 1).padStart(2, '0'), String(date.getDate()).padStart(2, '0')].join('-');
+        }
+
+        function getPeriodDays() {
+            const days = [];
+            const cursor = new Date(periodStart);
+            while (cursor <= periodEnd) {
+                days.push(new Date(cursor));
+                cursor.setDate(cursor.getDate() + 1);
+            }
+            return days;
+        }
+
+        function renderProgress(container, activeCount, total, activeClass) {
+            container.innerHTML = '';
+            for (let index = 0; index < total; index += 1) {
+                const tick = document.createElement('span');
+                tick.className = `progress-tick${index < activeCount ? ` ${activeClass}` : ''}`;
+                container.append(tick);
+            }
+        }
+
+        function renderFinanceWidget() {
+            const days = getPeriodDays();
+            const today = new Date();
+            const totalAmount = Object.values(entries).reduce((sum, amount) => sum + Number(amount), 0);
+            const totalPeriod = periodEnd - periodStart;
+            const elapsedPeriod = Math.min(Math.max(today - periodStart, 0), totalPeriod);
+            const periodPercent = Math.round((elapsedPeriod / totalPeriod) * 100);
+            const moneyPercent = Math.round((totalAmount / goalAmount) * 100);
+            const greenHue = Math.max(82, 118 - Math.min(moneyPercent, 150) * 0.24);
+
+            document.querySelector('#current-amount').textContent = `${totalAmount.toLocaleString('ru-RU')} ₽`;
+            document.querySelector('#period-progress').textContent = `${periodPercent}%`;
+            document.querySelector('#money-progress').textContent = `${moneyPercent}%`;
+            root.style.setProperty('--green-hue', greenHue);
+            renderProgress(document.querySelector('#period-track'), Math.ceil(elapsedPeriod / (24 * 60 * 60 * 1000)), days.length, 'period-active');
+            document.querySelector('#money-track').style.width = `${Math.min(100, Math.max(0, moneyPercent))}%`;
+
+            const grid = document.querySelector('#earnings-grid');
+            const monthStrip = document.querySelector('#calendar-months');
+            const gridStart = new Date(periodStart);
+            gridStart.setDate(gridStart.getDate() - ((gridStart.getDay() + 6) % 7));
+            const gridEnd = new Date(periodEnd);
+            gridEnd.setDate(gridEnd.getDate() + (6 - ((gridEnd.getDay() + 6) % 7)));
+            const weekCount = Math.round((gridEnd - gridStart) / (7 * 24 * 60 * 60 * 1000)) + 1;
+
+            monthStrip.innerHTML = '';
+            monthStrip.style.gridTemplateColumns = `repeat(${weekCount}, 8px)`;
+            const monthLabels = [];
+            days.forEach((day) => {
+                const monthKey = `${day.getFullYear()}-${day.getMonth()}`;
+                if (!monthLabels.some((month) => month.key === monthKey)) {
+                    const monthStart = new Date(day);
+                    const week = Math.floor((monthStart - gridStart) / (7 * 24 * 60 * 60 * 1000));
+                    monthLabels.push({ key: monthKey, week, label: monthStart.toLocaleDateString('ru-RU', { month: 'short' }).replace('.', '') });
+                }
+            });
+            monthLabels.forEach((month) => {
+                const label = document.createElement('span');
+                label.textContent = month.label;
+                label.style.gridColumn = `${month.week + 1}`;
+                monthStrip.append(label);
+            });
+
+            grid.innerHTML = '';
+            const dailyTarget = goalAmount / days.length;
+            for (let index = 0; index < weekCount * 7; index += 1) {
+                const day = new Date(gridStart);
+                day.setDate(gridStart.getDate() + index);
+                const key = formatDateKey(day);
+                const amount = Number(entries[key] || 0);
+                const isInsidePeriod = day >= periodStart && day <= periodEnd;
+                const level = amount === 0 ? 0 : amount >= dailyTarget * 2 ? 3 : amount >= dailyTarget ? 2 : 1;
+                const dayButton = document.createElement('button');
+                dayButton.type = 'button';
+                dayButton.className = `earning-day${isInsidePeriod ? ` level-${level}` : ' is-empty'}${key === formatDateKey(today) ? ' is-today' : ''}`;
+                dayButton.disabled = !isInsidePeriod;
+                dayButton.textContent = '';
+                dayButton.title = `${day.toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long' })}: ${amount.toLocaleString('ru-RU')} ₽`;
+                dayButton.setAttribute('aria-label', dayButton.title);
+                if (isInsidePeriod) {
+                    dayButton.addEventListener('click', (event) => {
+                        event.stopPropagation();
+                        document.querySelector('#entry-date').value = key;
+                        document.querySelector('#entry-amount').value = amount || '';
+                        document.querySelector('#entry-amount').focus();
+                    });
+                }
+                grid.append(dayButton);
+            }
+        }
+
+        function toggleFinanceWidget() {
+            const widget = document.querySelector('#finance-widget');
+            const isOpen = widget.classList.toggle('is-open');
+            widget.setAttribute('aria-expanded', isOpen);
+        }
+
+        document.querySelector('#finance-widget').addEventListener('click', (event) => {
+            if (!event.target.closest('.finance-details')) toggleFinanceWidget();
+        });
+        document.querySelector('#finance-widget').addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                toggleFinanceWidget();
+            }
+        });
+        document.querySelector('#entry-form').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const date = document.querySelector('#entry-date').value;
+            const amount = Math.max(0, Number(document.querySelector('#entry-amount').value || 0));
+            if (!date || date < formatDateKey(periodStart) || date > formatDateKey(periodEnd)) {
+                document.querySelector('#entry-note').textContent = 'Выберите дату с 1 сентября по 20 декабря.';
+                return;
+            }
+            if (amount === 0) delete entries[date];
+            else entries[date] = amount;
+            localStorage.setItem(moneyStorageKey, JSON.stringify(entries));
+            document.querySelector('#entry-note').textContent = 'Поступление сохранено.';
+            renderFinanceWidget();
+        });
+
+        document.querySelector('#entry-date').value = formatDateKey(new Date());
+        renderFinanceWidget();
 
         function updateHome() {
             const now = new Date();
             const hour = now.getHours();
+            const daysToTravel = Math.ceil((travelDate - now) / (24 * 60 * 60 * 1000));
             const colors = hour < 6
-                ? ['#090a0a', '#171918', '#f0ece4', '#e8e4db']
+                ? ['#090a0a', '#171918']
                 : hour < 11
-                    ? ['#eee9df', '#d8d2c7', '#20201e', '#eee9df']
+                    ? ['#242827', '#161918']
                     : hour < 18
-                        ? ['#bab9b3', '#8d8e89', '#20211f', '#d8d7d0']
+                        ? ['#303634', '#1b1e1d']
                         : hour < 22
-                            ? ['#4a4c4a', '#242725', '#f0ece4', '#30322f']
-                            : ['#090a0a', '#171918', '#f0ece4', '#e8e4db'];
+                            ? ['#1e2221', '#111413']
+                            : ['#090a0a', '#171918'];
 
             root.style.setProperty('--background', colors[0]);
             root.style.setProperty('--background-deep', colors[1]);
-            root.style.setProperty('--ink', colors[2]);
-            root.style.setProperty('--field', colors[3] + '55');
             themeColor.content = colors[0];
 
             document.querySelector('#moscow-time').textContent = new Intl.DateTimeFormat('ru-RU', { ...timeOptions, timeZone: 'Europe/Moscow' }).format(now);
             document.querySelector('#vladivostok-time').textContent = new Intl.DateTimeFormat('ru-RU', { ...timeOptions, timeZone: 'Asia/Vladivostok' }).format(now);
             document.querySelector('#moscow-date').textContent = new Intl.DateTimeFormat('ru-RU', { ...dateOptions, timeZone: 'Europe/Moscow' }).format(now);
-            const calendarDate = new Intl.DateTimeFormat('ru-RU', { day: '2-digit', month: 'short', timeZone: 'Europe/Moscow' }).formatToParts(now);
-            document.querySelector('#calendar-day').textContent = calendarDate.find((part) => part.type === 'day').value;
-            document.querySelector('#calendar-month').textContent = calendarDate.find((part) => part.type === 'month').value.replace('.', '');
-            document.querySelector('#calendar-weekday').textContent = new Intl.DateTimeFormat('ru-RU', { weekday: 'long', timeZone: 'Europe/Moscow' }).format(now);
-            document.querySelector('#daypart').textContent = hour < 6 || hour >= 22 ? 'Ночь' : hour < 11 ? 'Утро' : hour < 18 ? 'День' : 'Вечер';
+            document.querySelector('#travel-countdown').textContent = daysToTravel > 0 ? `D-${daysToTravel}` : 'В пути';
         }
 
         updateHome();
